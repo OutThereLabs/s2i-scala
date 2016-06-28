@@ -1,0 +1,25 @@
+#!/bin/bash -e
+#
+# S2I run script for the 'scala' image.
+# The run script executes the server that runs your application.
+#
+# For more information see the documentation:
+#	https://github.com/openshift/source-to-image/blob/master/docs/builder_image.md
+#
+
+# Set the environment to development by default.
+if [ -z "$DEV_MODE" ]; then
+  export DEV_MODE=false
+fi
+
+if [ "$DEV_MODE" == true ]; then
+  echo "Launching in dev mode..."
+  exec ./sbt run
+else
+  echo "Launching in production mode..."
+  if [ $(find target/universal/stage/bin -type f -executable | wc -l) -eq 1 ]; then
+    exec $(find target/universal/stage/bin -type f -executable)
+  else
+    echo "Could not detect proper start command in $(find target/universal/stage/bin)"
+  fi
+fi
