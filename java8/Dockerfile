@@ -24,7 +24,7 @@ RUN yum install -y sbt
 # COPY ./<builder_folder>/ /opt/app-root/
 
 # Copy the S2I scripts from the specific language image to $STI_SCRIPTS_PATH
-COPY ./s2i/bin/ $STI_SCRIPTS_PATH
+COPY ./.s2i/bin/ /usr/libexec/s2i
 
 # TODO: Drop the root user and make the content of /opt/app-root owned by user 1001
 RUN chown -R 1001:1001 /opt/app-root
@@ -36,4 +36,4 @@ USER 1001
 EXPOSE 9000
 
 # TODO: Set the default CMD for the image
-CMD $STI_SCRIPTS_PATH/usage
+CMD ["usage"]
