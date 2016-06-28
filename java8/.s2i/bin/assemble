@@ -24,4 +24,4 @@ echo "---> Installing application source..."
 cp -Rf /tmp/src/. ./
 
 echo "---> Building application from source..."
-exec ./sbt dist
+exec ./sbt stage
