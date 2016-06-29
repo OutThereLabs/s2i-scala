@@ -25,3 +25,10 @@ cp -Rf /tmp/src/. ./
 
 echo "---> Building application from source..."
 exec ./sbt stage
+
+echo "---> Fixing exec permissions..."
+if [ $(find target/universal/stage/bin -type f -executable | wc -l) -eq 1 ]; then
+	chmod a+x $(find target/universal/stage/bin -type f -executable)
+else
+	echo "Could not detect proper start command in $(find target/universal/stage/bin)"
+fi
