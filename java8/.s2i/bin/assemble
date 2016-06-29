@@ -27,6 +27,7 @@ echo "---> Building application from source..."
 ./sbt stage
 
 echo "---> Fixing exec permissions..."
+chmod a+rw target/universal/stage/
 if [ $(find target/universal/stage/bin -type f -executable | wc -l) -eq 1 ]; then
   chmod a+x $(find target/universal/stage/bin -type f -executable)
 else
