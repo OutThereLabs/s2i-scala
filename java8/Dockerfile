@@ -9,10 +9,10 @@ FROM openshift/base-centos7
 # ENV BUILDER_VERSION 1.0
 
 # TODO: Set labels used in OpenShift to describe the builder image
-#LABEL io.k8s.description="Platform for building xyz" \
-#      io.k8s.display-name="builder x.y.z" \
-#      io.openshift.expose-services="8080:http" \
-#      io.openshift.tags="builder,x.y.z,etc."
+LABEL io.k8s.description="Platform for and running Scala applications in Java 8" \
+     io.k8s.display-name="Scala with Java 8" \
+     io.openshift.expose-services="9000:http,8778:jolokia" \
+     io.openshift.tags="builder,scala,java8"
 
 # TODO: Install required packages here:
 RUN yum update -y
@@ -34,6 +34,7 @@ USER 1001
 
 # TODO: Set the default port for applications built using this image
 EXPOSE 9000
+EXPOSE 8778
 
 # TODO: Set the default CMD for the image
 CMD ["usage"]
