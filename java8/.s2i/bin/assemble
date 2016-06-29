@@ -15,9 +15,10 @@ fi
 
 # Restore artifacts from the previous build (if they exist).
 #
-if [ "$(ls /tmp/artifacts/ 2>/dev/null)" ]; then
+if [ "$(ls -a /tmp/artifacts/ 2>/dev/null)" ]; then
   echo "---> Restoring build artifacts..."
-  mv /tmp/artifacts/. ./
+  shopt -s dotglob
+  mv /tmp/artifacts/* ./
 fi
 
 echo "---> Installing application source..."
