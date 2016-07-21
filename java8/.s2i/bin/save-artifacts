@@ -8,4 +8,4 @@
 #	https://github.com/openshift/source-to-image/blob/master/docs/builder_image.md
 #
 # tar cf - <list of files and folders>
-tar cf - .ivy2 .sbt
+tar cf - .ivy2 .sbt target
