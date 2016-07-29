@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: s2i-scala
+objects:
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    name: s2i-scala
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: scala:java8
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      contextDir: java8
+      git:
+        uri: git@github.com:OutThereLabs/s2i-scala.git
+      secrets:
+        - secret:
+            name: s2i-scala-deploy-key
+    strategy:
+      dockerStrategy: {}
+      type: Docker
+    triggers:
+    - github:
+        secret: "${GITHUB_WEBHOOK_SECRET}"
+      type: GitHub
+    - generic:
+        secret: "${GENERIC_WEBHOOK_SECRET}"
+      type: Generic
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: scala
+parameters:
+  - name: "GITHUB_WEBHOOK_SECRET"
+    displayName: "GitHub Webhook Secret"
+    description: "A secret string used to configure the GitHub webhook."
+    generate: "expression"
+    from: "[a-zA-Z0-9]{40}"
+  - name: "GENERIC_WEBHOOK_SECRET"
+    displayName: "GitHub Webhook Secret"
+    description: "A secret string used to configure the GitHub webhook."
+    generate: "expression"
+    from: "[a-zA-Z0-9]{40}"
