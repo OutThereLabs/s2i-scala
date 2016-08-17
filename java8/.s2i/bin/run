@@ -14,11 +14,11 @@ fi
 
 if [ "$DEV_MODE" == true ]; then
   echo "Launching in dev mode..."
-  exec ./sbt -211 run
+  exec ./sbt -211 run $JAVA_OPTS
 else
   echo "Launching in production mode..."
   if [ $(find target/universal/stage/bin -type f -executable | wc -l) -eq 1 ]; then
-    exec $(find target/universal/stage/bin -type f -executable)
+    exec $(find target/universal/stage/bin -type f -executable) $JAVA_OPTS
   else
     echo "Could not detect proper start command in $(find target/universal/stage/bin)"
   fi
