@@ -20,5 +20,5 @@ oc login -u developer
 
 ## Set up our application
 ```bash
-oc new-app -f https://github.com/OutThereLabs/s2i-scala/blob/master/local-development.yaml --param="SOURCE_PATH=${PWD}"
+oc new-app -f https://raw.githubusercontent.com/OutThereLabs/s2i-scala/master/local-development.yaml --param="SOURCE_PATH=${PWD}"
 ```
