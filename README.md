@@ -12,4 +12,4 @@ $ oc process \
     | oc create -f -
 ```
 
-You can also use s2i Scala for [local development].(local-development.md)
+You can also use s2i Scala for [local development](local-development.md).
