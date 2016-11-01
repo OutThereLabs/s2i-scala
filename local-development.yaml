@@ -1,0 +1,262 @@
+apiVersion: v1
+kind: Template
+labels:
+  template: local-development
+metadata:
+  annotations:
+    description: Template for setting up local development for scala applications
+    iconClass: icon-play
+    tags: scala,play,slick,postgresql
+  name: local-development
+objects:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: Exposes and load balances the application pods
+    name: ${APPLICATION_NAME}
+  spec:
+    ports:
+    - name: web
+      port: 9000
+      targetPort: 9000
+    selector:
+      name: ${APPLICATION_NAME}
+- apiVersion: v1
+  kind: Route
+  metadata:
+    name: ${APPLICATION_NAME}
+  spec:
+    to:
+      kind: Service
+      name: ${APPLICATION_NAME}
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    name: ${APPLICATION_NAME}
+    annotations:
+      description: Defines how to deploy the application
+  spec:
+    strategy:
+      type: Rolling
+      rollingParams:
+        updatePeriodSeconds: 1
+        intervalSeconds: 1
+        timeoutSeconds: 600
+        maxUnavailable: 25%
+        maxSurge: 25%
+      resources:
+    triggers:
+      - type: ConfigChange
+      - type: ImageChange
+        imageChangeParams:
+          automatic: true
+          containerNames:
+            - ${APPLICATION_NAME}
+          from:
+            kind: ImageStreamTag
+            name: scala:latest
+    replicas: 1
+    selector:
+      name: ${APPLICATION_NAME}
+    template:
+      metadata:
+        name: ${APPLICATION_NAME}
+        labels:
+          name: ${APPLICATION_NAME}
+      spec:
+        containers:
+          - name: ${APPLICATION_NAME}
+            ports:
+              - name: http
+                containerPort: 9000
+              - name: jolokia
+                containerPort: 8778
+            env:
+              - name: PLAY_CRYPTO_SECRET
+                value: ${PLAY_CRYPTO_SECRET}
+              - name: DATABASE_HOST
+                value: ${DATABASE_SERVICE_NAME}
+              - name: DATABASE_PASSWORD
+                value: ${DATABASE_PASSWORD}
+              - name: DATABASE_USER
+                value: ${DATABASE_USER}
+              - name: DATABASE_NAME
+                value: ${DATABASE_NAME}
+              - name: DEV_MODE
+                value: "true"
+              - name: JAVA_OPTS
+                value: ${JAVA_OPTS}
+            image: ' '
+            command:
+              - /usr/libexec/s2i/run
+            readinessProbe:
+              httpGet:
+                path: /health-check
+                port: 9000
+              initialDelaySeconds: 120
+              timeoutSeconds: 1
+            resources:
+              limits:
+                memory: ${MEMORY_LIMIT}
+            stdin: true
+            tty: true
+            volumeMounts:
+              - mountPath: "/opt/app-root/src/"
+                name: source
+        volumes:
+        - name: source
+          hostPath:
+            path: ${SOURCE_PATH}
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    name: ${DATABASE_SERVICE_NAME}
+    annotations:
+      description: Defines how to deploy the database
+  spec:
+    replicas: 1
+    selector:
+      name: ${DATABASE_SERVICE_NAME}
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        name: ${DATABASE_SERVICE_NAME}
+        labels:
+          name: ${DATABASE_SERVICE_NAME}
+      spec:
+        containers:
+        - capabilities: {}
+          env:
+          - name: POSTGRESQL_USER
+            value: ${DATABASE_USER}
+          - name: POSTGRESQL_PASSWORD
+            value: ${DATABASE_PASSWORD}
+          - name: POSTGRESQL_DATABASE
+            value: ${DATABASE_NAME}
+          image: ' '
+          livenessProbe:
+            initialDelaySeconds: 30
+            tcpSocket:
+              port: 5432
+            timeoutSeconds: 1
+          name: postgresql
+          ports:
+          - containerPort: 5432
+          readinessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - -i
+              - -c
+              - psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c 'SELECT 1'
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+          resources:
+            limits:
+              memory: ${MEMORY_POSTGRESQL_LIMIT}
+          volumeMounts:
+          - mountPath: /var/lib/pgsql/data
+            name: ${DATABASE_SERVICE_NAME}-data
+        volumes:
+        - name: ${DATABASE_SERVICE_NAME}-data
+          emptyDir:
+            medium: ""
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - postgresql
+        from:
+          kind: ImageStreamTag
+          name: postgresql:9.5
+          namespace: ${DATABASE_NAMESPACE}
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: ${DATABASE_SERVICE_NAME}
+  spec:
+    portalIP: ""
+    ports:
+    - name: postgresql
+      nodePort: 0
+      port: 5432
+      protocol: TCP
+      targetPort: 5432
+    selector:
+      name: ${DATABASE_SERVICE_NAME}
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- kind: ImageStream
+  apiVersion: v1
+  metadata:
+    name: scala
+    annotations:
+      openshift.io/display-name: Scala
+  spec:
+    tags:
+    - name: latest
+      annotations:
+        openshift.io/display-name: Scala (Latest)
+        description: |-
+          Build and run Scala applications on CentOS 7. For more information about using this builder image, see https://github.com/OutThereLabs/s2i-scala.
+        iconClass: icon-scala
+        tags: builder,scala
+        supports: scala
+      from:
+        kind: DockerImage
+        name: 'outtherelabs/s2i-scala:latest'
+parameters:
+- description: The OpenShift Namespace where the Database ImageStream resides.
+  displayName: Database Namespace
+  name: DATABASE_NAMESPACE
+  required: true
+  value: openshift
+- description: Maximum amount of memory the Play container can use.
+  displayName: Memory Limit
+  name: MEMORY_LIMIT
+  required: true
+  value: 1Gi
+- description: Maximum amount of memory the PostgreSQL container can use.
+  displayName: Memory Limit (PostgreSQL)
+  name: MEMORY_POSTGRESQL_LIMIT
+  required: true
+  value: 512Mi
+- description: The path to your source directory
+  displayName: Source Path
+  name: SOURCE_PATH
+  required: true
+- description: The exposed hostname that will route to the Play service
+  displayName: Application Hostname
+  name: APPLICATION_NAME
+  required: true
+  value: app
+- description: The secret used to encrypt things like cookies
+  displayName: Play Crypto Secret
+  name: PLAY_CRYPTO_SECRET
+  from: '[a-zA-Z0-9]{16}'
+  generate: expression
+- displayName: Database Service Name
+  name: DATABASE_SERVICE_NAME
+  value: app-db
+- displayName: Database Username
+  value: developer
+  name: DATABASE_USER
+- displayName: Database Password
+  from: '[a-zA-Z0-9]{8}'
+  generate: expression
+  name: DATABASE_PASSWORD
+- displayName: Database Name
+  name: DATABASE_NAME
+  required: true
+  value: development
+- description: Java opts for tuning app JVM, e.g. -Xms128M -Xmx1024M
+  displayName: Java Opts
+  name: JAVA_OPTS
+  required: true
+  value: '-Xms128M -Xmx1024M'
