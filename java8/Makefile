@@ -1,5 +1,5 @@
 
-IMAGE_NAME = scala-java8-centos
+IMAGE_NAME = scala
 
 build:
 	docker build -t $(IMAGE_NAME) .

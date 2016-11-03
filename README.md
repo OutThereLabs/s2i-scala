@@ -13,3 +13,17 @@ $ oc process \
 ```
 
 You can also use s2i Scala for [local development](local-development.md).
+
+## Running tests
+
+To run the tests first install greadlink if you are on a mac
+
+```shell
+$ brew install coreutils
+```
+
+Then use the MAKEFILE
+
+```shell
+$ cd java8 && make test
+```
