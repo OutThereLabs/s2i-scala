@@ -14,7 +14,7 @@ fi
 
 if [ "$DEV_MODE" == true ]; then
   echo "Launching in dev mode..."
-  exec ./sbt -Dsbt.global.base=.sbt -ivy .ivy2 run
+  exec ./sbt
 else
   echo "Launching in production mode..."
   if [ $(find target/universal/stage/bin -type f -executable | wc -l) -eq 1 ]; then

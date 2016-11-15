@@ -34,7 +34,3 @@ if [ $(find target/universal/stage/bin -type f -executable | wc -l) -eq 1 ]; the
 else
   echo "Could not detect proper start command in $(find target/universal/stage/bin)"
 fi
-
-echo "---> Fixing sbt lock file permissions..."
-chown -R 1001:0 .sbt/ && chmod -R ug+rwx .sbt/
-chown -R 1001:0 .ivy2/ && chmod -R ug+rwx .ivy2/
