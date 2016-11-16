@@ -2,7 +2,7 @@ name := """test-app"""
 
 version := "1.0.0"
 
-lazy val root = (project in file(".")).enablePlugins(PlayScala)
+lazy val root = (project in file(".")).enablePlugins(PlayScala, BuildInfoPlugin, NewRelic, Jolokia)
 
 scalaVersion := "2.11.8"
 
