@@ -21,7 +21,11 @@ RUN yum update -y && \
 COPY ./test/test-app /opt/test-app-root
 
 # Cache SBT dependencies and plugins from test app
-RUN cd /opt/test-app-root && ./sbt compile
+RUN cd /opt/test-app-root && \
+    ./sbt \
+    -ivy /opt/app-root/src/.ivy2 \
+    -sbt-dir /opt/app-root/src/.sbt \
+    compile
 
 # Copy the S2I scripts from the specific language image to $STI_SCRIPTS_PATH
 COPY ./.s2i/bin/ /usr/libexec/s2i

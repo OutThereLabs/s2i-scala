@@ -25,7 +25,7 @@ echo "---> Installing application source..."
 cp -Rf /tmp/src/. ./
 
 echo "---> Building application from source..."
-./sbt -211 stage
+./sbt -ivy /opt/app-root/src/.ivy2 -sbt-dir /opt/app-root/src/.sbt stage
 
 echo "---> Fixing exec permissions..."
 chmod a+rw target/universal/stage/
