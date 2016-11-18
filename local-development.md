@@ -9,7 +9,7 @@ Then add 172.30.0.0/16 to your insecure registries in using the Docker menu bar 
 ### Install the OpenShift CLI tools
 ```bash
 brew update
-brew install openshift-cli
+brew install openshift-cli socat
 ```
 
 ### Set up our cluster
