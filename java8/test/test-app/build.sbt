@@ -9,8 +9,8 @@ scalaVersion := "2.11.8"
 libraryDependencies ++= Seq(
   "org.postgresql" % "postgresql" % "9.4.1212",
   "com.typesafe.play" %% "play-slick" % "2.0.2",
-  "com.github.tminglei" %% "slick-pg" % "0.14.3",
-  "com.github.tminglei" %% "slick-pg_date2" % "0.14.3",
+  "com.github.tminglei" %% "slick-pg" % "0.14.4",
+  "com.github.tminglei" %% "slick-pg_date2" % "0.14.4",
   "com.ticketfly" %% "play-liquibase" % "1.3",
   "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test
 )
