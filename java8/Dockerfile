@@ -11,11 +11,15 @@ LABEL io.k8s.description="Platform for running Scala applications in Java 8" \
       io.openshift.expose-services="9000:http,8778:jolokia" \
       io.openshift.tags="builder,scala,java8"
 
-# Install Java and SBT
+# Install Java, SBT, and openshift client
 RUN yum update -y && \
     yum install -y java-1.8.0-openjdk && \
     curl https://bintray.com/sbt/rpm/rpm | tee /etc/yum.repos.d/bintray-sbt-rpm.repo && \
-    yum install -y sbt
+    yum install -y sbt && \
+    set -o pipefail && curl -L https://github.com/openshift/origin/releases/download/v1.4.1/openshift-origin-client-tools-v1.4.1-3f9807a-linux-64bit.tar.gz | \
+    tar -zx && \
+    mv openshift*/oc /usr/local/bin && \
+    rm -rf openshift-origin-client-tools-*
 
 # Copy test app to cache directory
 COPY ./test/test-app /opt/test-app-root
