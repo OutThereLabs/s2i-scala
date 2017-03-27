@@ -42,7 +42,7 @@ objects:
       rollingParams:
         updatePeriodSeconds: 1
         intervalSeconds: 1
-        timeoutSeconds: 600
+        timeoutSeconds: 3600
         maxUnavailable: 25%
         maxSurge: 25%
       resources:
@@ -94,7 +94,7 @@ objects:
               httpGet:
                 path: /health-check
                 port: 9000
-              initialDelaySeconds: 120
+              initialDelaySeconds: 3600
               timeoutSeconds: 1
             resources:
               limits:
@@ -104,6 +104,8 @@ objects:
             volumeMounts:
               - mountPath: "/opt/app-root/src/"
                 name: source
+        securityContext:
+          runAsUser: 0
         volumes:
         - name: source
           hostPath:
