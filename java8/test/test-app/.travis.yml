@@ -1,8 +1,0 @@
-language: scala
-before_script:
-  - ./resetdb
-script: sbt test
-jdk:
-  - oraclejdk8
-services:
-  - postgresql
