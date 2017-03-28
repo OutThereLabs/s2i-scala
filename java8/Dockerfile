@@ -32,7 +32,8 @@ RUN cd /opt/test-app-root && \
     -ivy /opt/app-root/src/.ivy2 \
     -sbt-dir /opt/app-root/src/.sbt \
     -sbt-boot /opt/app-root/src/.sbt/boot \
-    compile
+    compile && \
+    rm -rf /opt/test-app-root
 
 # Copy the S2I scripts from the specific language image to $STI_SCRIPTS_PATH
 COPY s2i/bin/ $STI_SCRIPTS_PATH
