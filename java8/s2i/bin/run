@@ -7,16 +7,21 @@
 #	https://github.com/openshift/source-to-image/blob/master/docs/builder_image.md
 #
 
+#Set the debug port to 5858 by default.
+if [ -z "$DEBUG_PORT" ]; then
+  export DEBUG_PORT=5005
+fi
+
 # Set the environment to development by default.
 if [ -z "$DEV_MODE" ]; then
   export DEV_MODE=false
 fi
 
 if [ "$DEV_MODE" == true ]; then
-  echo "Launching in dev mode..."
-  exec ./sbt -ivy /opt/app-root/src/.ivy2 -sbt-dir /opt/app-root/src/.sbt -sbt-boot /opt/app-root/src/.sbt/boot -jvm-debug 5005 run
+  echo "Launching via SBT"
+  exec ./sbt -ivy /opt/app-root/src/.ivy2 -sbt-dir /opt/app-root/src/.sbt -sbt-boot /opt/app-root/src/.sbt/boot -jvm-debug ${DEBUG_PORT} run
 else
-  echo "Launching in production mode..."
+  echo "Launching via script"
   if [ $(find target/universal/stage/bin -type f -executable | wc -l) -eq 1 ]; then
     exec $(find target/universal/stage/bin -type f -executable)
   elif [ $(find bin -type f -executable | wc -l) -eq 1 ]; then
