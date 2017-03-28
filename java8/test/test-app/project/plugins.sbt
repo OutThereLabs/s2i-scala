@@ -1,23 +1,21 @@
 // The Play plugin
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.5.12")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.5.10")
 
-// Test Coverage
-addSbtPlugin("org.scoverage" %% "sbt-scoverage" % "1.5.0")
+// web plugins
 
-// Style Guide
-addSbtPlugin("org.scalariform" % "sbt-scalariform" % "1.6.0")
+addSbtPlugin("com.typesafe.sbt" % "sbt-coffeescript" % "1.0.0")
 
-// Scala Style
-addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "0.8.0")
+addSbtPlugin("com.typesafe.sbt" % "sbt-less" % "1.1.0")
 
-// Build Info
-addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.6.1")
+addSbtPlugin("com.typesafe.sbt" % "sbt-jshint" % "1.0.4")
 
-// Server Monitoring
-addSbtPlugin("com.gilt.sbt" % "sbt-newrelic" % "0.1.10")
+addSbtPlugin("com.typesafe.sbt" % "sbt-rjs" % "1.0.8")
+
+addSbtPlugin("com.typesafe.sbt" % "sbt-digest" % "1.1.1")
+
+addSbtPlugin("com.typesafe.sbt" % "sbt-mocha" % "1.1.0")
+
+addSbtPlugin("org.irundaia.sbt" % "sbt-sassify" % "1.4.6")
 
 // JMX API
 addSbtPlugin("com.jatescher" % "sbt-jolokia" % "1.0.2")
-
-// UTC timezone
-addSbtPlugin("com.timgroup" % "sbt-utc" % "0.0.14")

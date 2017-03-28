@@ -2,12 +2,12 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-# Health Check
-GET       /                com.example.api.controllers.HealthCheckController.index
+# An example controller showing a sample home page
+GET     /                           controllers.HomeController.index
+# An example controller showing how to use dependency injection
+GET     /count                      controllers.CountController.count
+# An example controller showing how to write asynchronous code
+GET     /message                    controllers.AsyncController.message
 
-# Posts
-GET       /v1/posts        com.example.api.controllers.v1.PostsController.index
-POST      /v1/posts        com.example.api.controllers.v1.PostsController.create
-GET       /v1/posts/:id    com.example.api.controllers.v1.PostsController.show(id: java.util.UUID)
-PUT       /v1/posts/:id    com.example.api.controllers.v1.PostsController.update(id: java.util.UUID)
-DELETE    /v1/posts/:id    com.example.api.controllers.v1.PostsController.destroy(id: java.util.UUID)
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
