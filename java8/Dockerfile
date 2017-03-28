@@ -33,17 +33,17 @@ RUN cd /opt/test-app-root && \
     -sbt-dir /opt/app-root/src/.sbt \
     -sbt-boot /opt/app-root/src/.sbt/boot \
     compile && \
-    rm -rf /opt/test-app-root
+    rm -rf /opt/test-app-root && \
+    chown -R 1001:0 /opt/app-root && chmod -R ug+rwx /opt/app-root
 
 # Copy the S2I scripts from the specific language image to $STI_SCRIPTS_PATH
 COPY s2i/bin/ $STI_SCRIPTS_PATH
 
-# Drop the root user and make the content of /opt/app-root owned by user 1001
-RUN chown -R 1001:0 /opt/app-root && chmod -R ug+rwx /opt/app-root
+# Make sure we are running as user 1001
 USER 1001
 
 # Expose default Play and Jolokia ports
 EXPOSE 9000 8778
 
-# TODO: Set the default CMD for the image
+# Set the default CMD for the image
 CMD $STI_SCRIPTS_PATH/usage
