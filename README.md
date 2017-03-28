@@ -14,7 +14,16 @@ $ oc process \
 
 You can also use s2i Scala for [local development](local-development.md).
 
-## Running tests
+## Binary Builds
+
+You can do a binary build by attaching the contents of target/universal/stage insteaf of source code:
+
+```shell source to build
+sbt stage
+s2i build --pull-policy=never --copy target/universal/stage outtherelabs/s2i-scala my-app
+```
+
+## Running Tests
 
 To run the tests first install greadlink if you are on a mac
 
