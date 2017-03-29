@@ -94,8 +94,8 @@ objects:
               httpGet:
                 path: /health-check
                 port: 9000
-              initialDelaySeconds: 3600
-              timeoutSeconds: 1
+              initialDelaySeconds: 60
+              timeoutSeconds: 10
             resources:
               limits:
                 memory: ${MEMORY_LIMIT}
@@ -104,12 +104,32 @@ objects:
             volumeMounts:
               - mountPath: "/opt/app-root/src/"
                 name: source
+              - mountPath: "/opt/app-root/src/.sbt"
+                name: sbt
+              - mountPath: "/opt/app-root/src/.ivy2"
+                name: ivy2
+              - mountPath: "/opt/app-root/src/project/target"
+                name: project-target
+              - mountPath: "/opt/app-root/src/target"
+                name: app-target
         securityContext:
           runAsUser: 0
         volumes:
         - name: source
           hostPath:
             path: ${SOURCE_PATH}
+        - name: ivy2
+          hostPath:
+            path: /home/docker/.ivy2
+        - name: sbt
+          hostPath:
+            path: /home/docker/.sb2
+        - name: project-target
+          hostPath:
+            path: /home/docker/${APPLICATION_NAME}-project-target
+        - name: app-target
+          hostPath:
+            path: /home/docker/${APPLICATION_NAME}-app-target
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
