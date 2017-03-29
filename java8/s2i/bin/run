@@ -27,6 +27,6 @@ else
   elif [ $(find bin -type f -executable | wc -l) -eq 1 ]; then
     exec $(find bin -type f -executable)
   else
-    echo "Could not detect proper start command in $(find ./)"
+    echo "Could not detect proper start command in $(ls)"
   fi
 fi
