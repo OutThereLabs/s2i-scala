@@ -38,7 +38,7 @@ elif [ $(find target/universal/stage/bin -type f -executable | wc -l) -eq 1 ]; t
   chmod a+x $(find target/universal/stage/bin -type f -executable)
 elif [ $(find bin -type f -executable | wc -l) -eq 1 ]; then
   echo "---> Fixing permission for binary build..."
-  chmod a+x $(find /bin -type f -executable)
+  chmod a+x $(find bin -type f -executable)
 else
   echo "---> Nothing to build"
 fi
