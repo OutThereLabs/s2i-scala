@@ -1,5 +1,5 @@
 // The Play plugin
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.5.10")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.5.14")
 
 // web plugins
 
@@ -18,4 +18,4 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-mocha" % "1.1.0")
 addSbtPlugin("org.irundaia.sbt" % "sbt-sassify" % "1.4.6")
 
 // JMX API
-addSbtPlugin("com.jatescher" % "sbt-jolokia" % "1.0.2")
+addSbtPlugin("com.jatescher" % "sbt-jolokia" % "1.0.3")
