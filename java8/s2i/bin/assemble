@@ -33,14 +33,15 @@ if [ -f "./sbt" ]; then
   else
     echo "Could not detect proper start command in $(find target/universal/stage/bin)"
   fi
-elif [ $(find target/universal/stage/bin -type f -executable | wc -l) -eq 1 ]; then
-  echo "---> Fixing permission for binary build..."
-  chmod a+x $(find target/universal/stage/bin -type f -executable)
-elif [ $(find bin -type f -executable | wc -l) -eq 1 ]; then
-  echo "---> Fixing permission for binary build..."
-  chmod a+x $(find bin -type f -executable)
 else
-  echo "---> Nothing to build"
+  echo "---> Fixing permission for binary build..."
+  if [ -f "./bin" ]; then
+    chmod a+x $(find bin -type f -executable)
+  elif [ -f "target/universal/stage/bin" ]; then
+    chmod a+x $(find target/universal/stage/bin -type f -executable)
+  else
+   echo "---> No binary build permissions to fix."
+  fi
 fi
 
 # Fix source directory permissions
