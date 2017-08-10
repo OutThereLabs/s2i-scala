@@ -28,16 +28,13 @@ cp -Rf /tmp/src/. ./
 if [ -f "./sbt" ]; then
   echo "---> Building application from source..."
   ./sbt -ivy /opt/app-root/src/.ivy2 -sbt-dir /opt/app-root/src/.sbt -sbt-boot /opt/app-root/src/.sbt/boot stage
-  if [ $(find target/universal/stage/bin -type f -executable | wc -l) -eq 1 ]; then
-    chmod a+x $(find target/universal/stage/bin -type f -executable)
-  else
-    echo "Could not detect proper start command in $(find target/universal/stage/bin)"
-  fi
+  echo "---> Fixing permission for build..."
+  chmod a+x $(find target/universal/stage/bin -type f -executable)
 else
   echo "---> Fixing permission for binary build..."
-  if [ -f "./bin" ]; then
+  if [ -d "./bin" ]; then
     chmod a+x $(find bin -type f -executable)
-  elif [ -f "target/universal/stage/bin" ]; then
+  elif [ -d "./target/universal/stage/bin" ]; then
     chmod a+x $(find target/universal/stage/bin -type f -executable)
   else
    echo "---> No binary build permissions to fix."
