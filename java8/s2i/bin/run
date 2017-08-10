@@ -22,7 +22,7 @@ if [ "$DEV_MODE" == true ]; then
   exec ./sbt -ivy /opt/app-root/src/.ivy2 -sbt-dir /opt/app-root/src/.sbt -sbt-boot /opt/app-root/src/.sbt/boot -jvm-debug ${DEBUG_PORT} run
 else
   echo "Launching via script"
-  if [ -z "$SBT_APP_BINARY_PATH" ]; then
+  if [ -v SBT_APP_BINARY_PATH ]; then
     exec $SBT_APP_BINARY_PATH
   elif [ $(find target/universal/stage/bin -type f -executable | wc -l) -eq 1 ]; then
     exec $(find target/universal/stage/bin -type f -executable)
