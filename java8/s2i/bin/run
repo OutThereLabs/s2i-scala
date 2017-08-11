@@ -22,12 +22,20 @@ if [ "$DEV_MODE" == true ]; then
   exec ./sbt -ivy /opt/app-root/src/.ivy2 -sbt-dir /opt/app-root/src/.sbt -sbt-boot /opt/app-root/src/.sbt/boot -jvm-debug ${DEBUG_PORT} run
 else
   echo "Launching via script"
-  if [ -v SBT_APP_BINARY_PATH ]; then
-    exec $SBT_APP_BINARY_PATH
-  elif [ $(find target/universal/stage/bin -type f -executable | wc -l) -eq 1 ]; then
-    exec $(find target/universal/stage/bin -type f -executable)
-  elif [ $(find bin -type f -executable | wc -l) -eq 1 ]; then
-    exec $(find bin -type f -executable)
+  if [ -d "./bin" ]; then
+    APP_BINARY_PATH="./bin"
+  elif [ -d "./target/universal/stage/bin" ]; then
+    APP_BINARY_PATH="./target/universal/stage/bin"
+  fi
+
+  if [ -v APP_BINARY_PATH ]; then
+    if [ $(find $APP_BINARY_PATH -type f -executable | wc -l) -eq 1 ]; then
+      exec $(find $APP_BINARY_PATH -type f -executable)
+    elif [ -v SBT_APP_NAME ]; then
+      exec "$APP_BINARY_PATH$SBT_APP_NAME"
+    else
+      echo "Could not detect proper start command in $APP_BINARY_PATH"
+    fi
   else
     echo "Could not detect proper start command in $(ls)"
   fi
