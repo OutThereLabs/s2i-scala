@@ -23,9 +23,9 @@ if [ "$DEV_MODE" == true ]; then
 else
   echo "Launching via script"
   if [ -d "./bin" ]; then
-    APP_BINARY_PATH="./bin"
+    APP_BINARY_PATH="./bin/"
   elif [ -d "./target/universal/stage/bin" ]; then
-    APP_BINARY_PATH="./target/universal/stage/bin"
+    APP_BINARY_PATH="./target/universal/stage/bin/"
   fi
 
   if [ -v APP_BINARY_PATH ]; then
