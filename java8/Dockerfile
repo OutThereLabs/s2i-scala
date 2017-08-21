@@ -18,7 +18,7 @@ RUN yum update -y && \
     yum install -y java-1.8.0-openjdk-devel && \
     curl https://bintray.com/sbt/rpm/rpm | tee /etc/yum.repos.d/bintray-sbt-rpm.repo && \
     yum install -y sbt && \
-    set -o pipefail && curl -L https://github.com/openshift/origin/releases/download/v3.6.0/openshift-origin-server-v3.6.0-c4dd4cf-linux-64bit.tar.gz | \
+    set -o pipefail && curl -L https://github.com/openshift/origin/releases/download/v3.6.0/openshift-origin-client-tools-v3.6.0-c4dd4cf-linux-64bit.tar.gz | \
     tar -zx && \
     mv openshift*/oc /usr/local/bin && \
     rm -rf openshift-origin-client-tools-*
